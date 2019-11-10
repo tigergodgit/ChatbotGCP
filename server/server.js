@@ -48,12 +48,40 @@ async function runSample(
   }
 }
 
+async function voicetotext(wav) {
+  const speech = require("@google-cloud/speech");
+  const fs = require("fs");
+  const client = new speech.SpeechClient();
+  const audioBytes = wav.toString("base64");
+  const audio = {
+    content: audioBytes
+  };
+  const config = {
+    encoding: "LINEAR16",
+    sampleRateHertz: 16000,
+    languageCode: "en-US"
+  };
+  const request = {
+    audio: audio,
+    config: config
+  };
+  // Detects speech in the audio file
+  const [response] = await client.recognize(request);
+  const transcription = response.results
+    .map(result => result.alternatives[0].transcript)
+    .join("\n");
+  console.log(`Transcription: ${transcription}`);
+}
+
 io.on("connection", socket => {
   console.log("新用户连接成功");
 
   socket.on("chat message", msg => {
     console.log(msg);
     runSample(msg, socket);
+  });
+  socket.on("voice", wav => {
+    voicetotext(wav);
   });
   socket.on("disconnect", () => {
     console.log("用户连接断开");

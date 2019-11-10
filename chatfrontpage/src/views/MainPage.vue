@@ -46,6 +46,13 @@
 </template>
 
 <script>
+import Recorderx, { ENCODE_TYPE } from "recorderx";
+const rc = new Recorderx({
+  recordable: true,
+  sampleRate: 16000,
+  sampleBits: 16,
+  bufferSize: 16384
+});
 export default {
   name: "",
   data() {
@@ -60,8 +67,23 @@ export default {
       this.messageList.push(this.message);
       this.message = null;
     },
-    startvoice() {},
-    stopvoice() {}
+    startvoice() {
+      rc.start()
+        .then(() => {
+          console.log("start recording");
+        })
+        .catch(error => {
+          console.log("Recording failed.", error);
+        });
+    },
+    stopvoice() {
+      rc.pause();
+      const wav = rc.getRecord({
+        encodeTo: ENCODE_TYPE.WAV,
+        compressible: true
+      });
+      this.$socket.emit("voice", wav);
+    }
   },
   created() {
     this.$socket.on("resMsg", msg => {
@@ -103,6 +125,7 @@ export default {
   width: 600px;
   height: 460px;
   background-color: #e3f2fd;
+  overflow: auto;
 }
 .chatinput {
   display: flex;
