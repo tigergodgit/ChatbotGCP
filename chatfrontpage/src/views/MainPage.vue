@@ -68,6 +68,7 @@ export default {
       this.message = null;
     },
     startvoice() {
+      rc.clear();
       rc.start()
         .then(() => {
           console.log("start recording");
@@ -79,11 +80,13 @@ export default {
     stopvoice() {
       rc.pause();
       const wav = rc.getRecord({
-        encodeTo: ENCODE_TYPE.WAV,
+        encodeTo: ENCODE_TYPE.PCM,
         compressible: true
       });
       console.log(wav);
       this.$socket.emit("voice", wav);
+      console.log(`发送数据,清除缓存...`);
+      rc.clear();
     }
   },
   created() {
