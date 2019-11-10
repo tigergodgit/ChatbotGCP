@@ -90,7 +90,7 @@ async function dialogflowspeechtotext(
     session: sessionPath,
     queryInput: {
       audioConfig: {
-        audioEncoding: "LINEAR16",
+        audioEncoding: "AUDIO_ENCODING_LINEAR_16",
         sampleRateHertz: 16000,
         languageCode: "en-US"
       }
