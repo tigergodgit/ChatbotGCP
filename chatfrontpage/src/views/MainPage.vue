@@ -61,6 +61,17 @@ export default {
       messageList: ["Hello,I am chatbot ,do you have any questions???"]
     };
   },
+  created() {
+    this.$socket.on("resMsg", msg => {
+      this.messageList.push(msg);
+    });
+    this.$socket.on("queryText", msg => {
+      this.messageList.push(msg);
+    });
+    this.$socket.on("fulfillmentText", msg => {
+      this.messageList.push(msg);
+    });
+  },
   methods: {
     dealmessage() {
       this.$socket.emit("chat message", this.message);
@@ -88,11 +99,6 @@ export default {
       console.log(`发送数据,清除缓存...`);
       rc.clear();
     }
-  },
-  created() {
-    this.$socket.on("resMsg", msg => {
-      this.messageList.push(msg);
-    });
   }
 };
 </script>

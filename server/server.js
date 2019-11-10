@@ -75,16 +75,15 @@ async function voicetotext(wav) {
 }
 
 async function dialogflowspeechtotext(
-  wav,
+  msg,
+  socket,
   projectId = "grantdialogflownode-fwoaqv"
 ) {
   const sessionClient = new dialogflow.SessionsClient({
     keyFilename: path.join(__dirname, "./GrantDialogflowNode-02f1c9fcdbb6.json")
   });
   const sessionId = uuid.v4();
-
   const sessionPath = sessionClient.sessionPath(projectId, sessionId);
-
   const inputAudio = wav;
   const request = {
     session: sessionPath,
@@ -100,8 +99,10 @@ async function dialogflowspeechtotext(
 
   // Recognizes the speech in the audio and detects its intent.
   const [response] = await sessionClient.detectIntent(request);
-
-  console.log("Detected intent:" + JSON.stringify(response));
+  console.log(`---Query: ${response.queryResult.queryText}`);
+  console.log(`---Response: ${response.queryResult.fulfillmentText}`);
+  socket.emit("queryText", response.queryResult.queryText);
+  socket.emit("fulfillmentText", response.queryResult.fulfillmentText);
 }
 
 io.on("connection", socket => {
@@ -113,7 +114,7 @@ io.on("connection", socket => {
   });
   socket.on("voice", wav => {
     voicetotext(wav);
-    dialogflowspeechtotext(wav);
+    dialogflowspeechtotext(wav, socket);
   });
   socket.on("disconnect", () => {
     console.log("用户连接断开");
