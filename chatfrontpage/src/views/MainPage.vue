@@ -11,18 +11,32 @@
         <div class="chaticon"></div>
         <div class="chattitle"></div>
       </div>
-      <div class="chatbody"></div>
+      <div class="chatbody">
+        <mu-list>
+          <mu-list-item v-for="(item,index) in  messageList" :key="index">{{item}}</mu-list-item>
+        </mu-list>
+      </div>
       <div class="chatinput">
         <div class="inputtext">
-          <mu-text-field v-model="message" label="please send a message" full-width></mu-text-field>
+          <mu-text-field
+            v-model="message"
+            label="please send a message"
+            full-width
+            @keyup.enter="dealmessage"
+          ></mu-text-field>
         </div>
         <div class="sendbutton">
-          <mu-button small fab color="red">
+          <mu-button small fab color="red" @click="dealmessage">
             <mu-icon value="send"></mu-icon>
           </mu-button>
         </div>
         <div class="voicebutton">
-          <mu-button fab small color="pink">
+          <mu-button fab small color="pink" @click="startvoice">
+            <mu-icon value="android"></mu-icon>
+          </mu-button>
+        </div>
+        <div class="voicebutton">
+          <mu-button fab small color="black" @click="stopvoice">
             <mu-icon value="android"></mu-icon>
           </mu-button>
         </div>
@@ -36,8 +50,14 @@ export default {
   name: "",
   data() {
     return {
-      message: ""
+      message: "",
+      messageList: ["Hello,I am chatbot ,do you have any questions???"]
     };
+  },
+  methods: {
+    dealmessage() {
+      this.$socket.emit("chat message", this.message);
+    }
   }
 };
 </script>
