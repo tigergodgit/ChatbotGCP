@@ -12,7 +12,11 @@ app.get("/", (req, res) => {
   res.send("Hello ChatBot!!!");
 });
 
-async function runSample(msg, projectId = "grantdialogflownode-fwoaqv") {
+async function runSample(
+  msg,
+  socket,
+  projectId = "grantdialogflownode-fwoaqv"
+) {
   // A unique identifier for the given session
   const sessionId = uuid.v4();
 
@@ -49,7 +53,7 @@ io.on("connection", socket => {
 
   socket.on("chat message", msg => {
     console.log(msg);
-    runSample(msg);
+    runSample(msg, socket);
   });
   socket.on("disconnect", () => {
     console.log("用户连接断开");
