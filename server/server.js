@@ -50,8 +50,9 @@ async function runSample(
 
 async function voicetotext(wav) {
   const speech = require("@google-cloud/speech");
-  const fs = require("fs");
-  const client = new speech.SpeechClient();
+  const client = new speech.SpeechClient({
+    keyFilename: path.join(__dirname, "./GrantDialogflowNode-02f1c9fcdbb6.json")
+  });
   const audioBytes = wav.toString("base64");
   const audio = {
     content: audioBytes

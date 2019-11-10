@@ -82,6 +82,7 @@ export default {
         encodeTo: ENCODE_TYPE.WAV,
         compressible: true
       });
+      console.log(wav);
       this.$socket.emit("voice", wav);
     }
   },
