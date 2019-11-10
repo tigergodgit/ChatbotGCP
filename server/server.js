@@ -74,6 +74,36 @@ async function voicetotext(wav) {
   console.log(`Transcription: ${transcription}`);
 }
 
+async function dialogflowspeechtotext(
+  wav,
+  projectId = "grantdialogflownode-fwoaqv"
+) {
+  const sessionClient = new dialogflow.SessionsClient({
+    keyFilename: path.join(__dirname, "./GrantDialogflowNode-02f1c9fcdbb6.json")
+  });
+  const sessionId = uuid.v4();
+
+  const sessionPath = sessionClient.sessionPath(projectId, sessionId);
+
+  const inputAudio = wav;
+  const request = {
+    session: sessionPath,
+    queryInput: {
+      audioConfig: {
+        audioEncoding: "LINEAR16",
+        sampleRateHertz: 16000,
+        languageCode: "en-US"
+      }
+    },
+    inputAudio: inputAudio
+  };
+
+  // Recognizes the speech in the audio and detects its intent.
+  const [response] = await sessionClient.detectIntent(request);
+
+  console.log("Detected intent:");
+}
+
 io.on("connection", socket => {
   console.log("新用户连接成功");
 
@@ -83,6 +113,7 @@ io.on("connection", socket => {
   });
   socket.on("voice", wav => {
     voicetotext(wav);
+    dialogflowspeechtotext(wav);
   });
   socket.on("disconnect", () => {
     console.log("用户连接断开");
