@@ -101,7 +101,7 @@ async function dialogflowspeechtotext(
   // Recognizes the speech in the audio and detects its intent.
   const [response] = await sessionClient.detectIntent(request);
 
-  console.log("Detected intent:" + response.toString());
+  console.log("Detected intent:" + response.queryResult);
 }
 
 io.on("connection", socket => {
