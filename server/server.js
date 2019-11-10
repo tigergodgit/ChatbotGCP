@@ -75,7 +75,7 @@ async function voicetotext(wav) {
 }
 
 async function dialogflowspeechtotext(
-  msg,
+  wav,
   socket,
   projectId = "grantdialogflownode-fwoaqv"
 ) {
