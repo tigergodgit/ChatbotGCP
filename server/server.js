@@ -102,7 +102,10 @@ async function dialogflowspeechtotext(
   console.log(`---Query: ${response.queryResult.queryText}`);
   console.log(`---Response: ${response.queryResult.fulfillmentText}`);
   socket.emit("queryText", response.queryResult.queryText);
-  socket.emit("fulfillmentText", response.queryResult.fulfillmentText);
+  setTimeout(
+    socket.emit("fulfillmentText", response.queryResult.fulfillmentText),
+    1000
+  );
 }
 
 io.on("connection", socket => {
