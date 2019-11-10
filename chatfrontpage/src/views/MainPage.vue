@@ -57,7 +57,16 @@ export default {
   methods: {
     dealmessage() {
       this.$socket.emit("chat message", this.message);
-    }
+      this.messageList.push(this.message);
+      this.message = null;
+    },
+    startvoice() {},
+    stopvoice() {}
+  },
+  created() {
+    this.$socket.on("resMsg", msg => {
+      this.messageList.push(msg);
+    });
   }
 };
 </script>
