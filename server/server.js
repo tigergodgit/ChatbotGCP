@@ -109,6 +109,8 @@ io.on("connection", socket => {
   console.log("新用户连接成功");
 
   socket.on("chat message", msg => {
+    console.log(`msg`);
+    console.log(`debug`);
     console.log(msg);
     runSample(msg, socket);
   });
